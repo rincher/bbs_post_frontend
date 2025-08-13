@@ -48,10 +48,8 @@ jobs:
         with:
           images: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
+            type=raw,value=latest
             type=sha,prefix={{branch}}-
-            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
         id: build
@@ -71,6 +69,8 @@ jobs:
 
       - name: Download task definition
         run: |
+          echo "Waiting for ECR image to be available..."
+          sleep 10
           aws ecs describe-task-definition \
             --task-definition $ECS_TASK_DEFINITION \
             --query taskDefinition > task-definition.json
@@ -81,7 +81,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: nextjs-bbs-container
-          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -93,3 +93,17 @@ jobs:
 
       - name: Print image digest
         run: echo ${{ steps.build.outputs.digest }}
+
+      - name: Verify ECR image
+        run: |
+          echo "Checking if image exists in ECR..."
+          aws ecr describe-images \
+            --repository-name ${{ env.ECR_REPOSITORY }} \
+            --image-ids imageTag=latest \
+            --region ${{ env.AWS_REGION }} || echo "Latest tag not found"
+
+          echo "Available tags:"
+          aws ecr list-images \
+            --repository-name ${{ env.ECR_REPOSITORY }} \
+            --region ${{ env.AWS_REGION }} \
+            --max-items 10
