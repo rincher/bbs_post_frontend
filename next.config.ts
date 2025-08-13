@@ -1,6 +1,5 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   async rewrites() {
     return [
       {
@@ -9,7 +8,15 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  env: {
+    SPRING_BOOT_URL: process.env.SPRING_BOOT_URL || "http://localhost:8080",
+  },
   output: "standalone",
+  experimental: {
+    serverActions: {
+      allowedOrigins: ["localhost:3000", process.env.VERCEL_URL],
+    },
+  },
 };
 
 export default nextConfig;
