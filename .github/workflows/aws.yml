@@ -101,7 +101,7 @@ jobs:
             --repository-name ${{ env.ECR_REPOSITORY }} \
             --image-ids imageTag=latest \
             --region ${{ env.AWS_REGION }} || echo "Latest tag not found"
-
+          
           echo "Available tags:"
           aws ecr list-images \
             --repository-name ${{ env.ECR_REPOSITORY }} \
