@@ -14,7 +14,10 @@ const nextConfig = {
   output: "standalone",
   experimental: {
     serverActions: {
-      allowedOrigins: ["localhost:3000", process.env.VERCEL_URL],
+      allowedOrigins: [
+        "localhost:3000",
+        ...(process.env.VERCEL_URL ? [process.env.VERCEL_URL] : []),
+      ],
     },
   },
 };
