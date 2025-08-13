@@ -1,0 +1,72 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store
+
+# Testing
+coverage
+*.lcov
+jest.config.js
+__tests__
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Next.js
+.next/
+out/
+build
+dist
+
+# Production
+.vercel
+
+# Misc
+.DS_Store
+*.pem
+
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+README.md
+CHANGELOG.md
+LICENSE
+
+# GitHub Actions
+.github
+*.md
+
+# Build tools
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# AWS files
+aws-*.sh
+task-definition*.json
+
+# Cache
+.cache
+.parcel-cache
+.eslintcache
