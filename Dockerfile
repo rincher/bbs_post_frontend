@@ -22,14 +22,6 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN corepack enable pnpm
 RUN pnpm build
 
-# 빌드 결과 확인
-RUN echo "=== Build output check ===" && \
-    ls -la .next/ && \
-    ls -la .next/static/ && \
-    ls -la .next/standalone/ && \
-    echo "=== Static files ===" && \
-    find .next/static -name "*.js" | head -5
-
 FROM base AS runner
 WORKDIR /app
 
@@ -39,18 +31,13 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy public directory
 COPY --from=builder /app/public ./public
-RUN chown -R nextjs:nodejs public
 
-# Automatically leverage output traces to reduce image size
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone .
+# standalone 서버 파일 복사
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 
-# 파일 권한 및 구조 확인
-RUN echo "=== Final file check ===" && \
-    ls -la && \
-    ls -la .next/ && \
-    ls -la .next/static/
+# static 파일 복사 (중요!)
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
