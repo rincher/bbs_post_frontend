@@ -41,10 +41,10 @@ RUN adduser --system --uid 1001 nextjs
 
 # Copy public directory
 COPY --from=builder /app/public ./public
+RUN chown -R nextjs:nodejs public
 
 # Automatically leverage output traces to reduce image size
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone .
 
 # 파일 권한 및 구조 확인
 RUN echo "=== Final file check ===" && \
