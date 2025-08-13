@@ -50,8 +50,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone .
 RUN echo "=== Final file check ===" && \
     ls -la && \
     ls -la .next/ && \
-    ls -la .next/static/ && \
-    chown -R nextjs:nodejs .next
+    ls -la .next/static/
 
 USER nextjs
 
