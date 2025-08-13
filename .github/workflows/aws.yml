@@ -77,7 +77,7 @@ jobs:
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v2
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
           container-name: nextjs-bbs-container
@@ -89,7 +89,6 @@ jobs:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
 
       - name: Print image digest
         run: echo ${{ steps.build.outputs.digest }}
@@ -101,7 +100,7 @@ jobs:
             --repository-name ${{ env.ECR_REPOSITORY }} \
             --image-ids imageTag=latest \
             --region ${{ env.AWS_REGION }} || echo "Latest tag not found"
-          
+
           echo "Available tags:"
           aws ecr list-images \
             --repository-name ${{ env.ECR_REPOSITORY }} \
