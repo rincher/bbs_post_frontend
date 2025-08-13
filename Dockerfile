@@ -2,70 +2,60 @@
 
 FROM node:22-alpine AS base
 
-# Install dependencies only when needed
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-
-# Copy package files
 COPY package.json pnpm-lock.yaml* ./
-
-# Enable corepack and install pnpm
 RUN corepack enable pnpm
-
-# Install dependencies
 RUN pnpm install --frozen-lockfile
 
-# Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-
-# Copy node_modules from deps stage
 COPY --from=deps /app/node_modules ./node_modules
-
-# Copy source code
 COPY . .
 
-# Environment variables for build
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV SPRING_BOOT_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Enable corepack and build
 RUN corepack enable pnpm
 RUN pnpm build
 
-# Production image
+# 빌드 결과 확인
+RUN echo "=== Build output check ===" && \
+    ls -la .next/ && \
+    ls -la .next/static/ && \
+    ls -la .next/standalone/ && \
+    echo "=== Static files ===" && \
+    find .next/static -name "*.js" | head -5
+
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Create user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy public assets
+# Copy public directory
 COPY --from=builder /app/public ./public
 
-# Create .next directory with correct permissions
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Copy Next.js build output
+# Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Debug: Check file structure
-RUN ls -la .next/
-RUN ls -la .next/static/ || echo "No static directory"
+# 파일 권한 및 구조 확인
+RUN echo "=== Final file check ===" && \
+    ls -la && \
+    ls -la .next/ && \
+    ls -la .next/static/ && \
+    chown -R nextjs:nodejs .next
 
 USER nextjs
 
 EXPOSE 3000
-
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
