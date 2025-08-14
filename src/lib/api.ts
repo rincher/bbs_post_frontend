@@ -3,7 +3,7 @@ import axios from "axios";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: "/api", // 이렇게 변경!
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
