@@ -7,7 +7,7 @@ const getBaseURL = () => {
     return process.env.API_URL || "http://localhost:8080";
   }
   // 클라이언트 사이드
-  return "/api";
+  return process.env.NEXT_PUBLIC_API_URL || "/api";
 };
 
 const apiClient = axios.create({
