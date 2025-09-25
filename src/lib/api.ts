@@ -1,13 +1,7 @@
 import axios from "axios";
 
 const getBaseURL = () => {
-  if (typeof window === "undefined") {
-    // 서버 사이드
-    console.log(process.env.API_URL);
-    return (process.env.API_URL || "http://localhost:8080") + "/api";
-  }
-  // 클라이언트 사이드
-  return process.env.NEXT_PUBLIC_API_URL + "/api";
+  return "/api";
 };
 
 const apiClient = axios.create({
