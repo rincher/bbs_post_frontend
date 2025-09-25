@@ -5,12 +5,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: process.env.SPRING_BOOT_URL + "/api/:path*",
+        destination:
+          (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080") +
+          "/api/:path*",
       },
     ];
-  },
-  env: {
-    SPRING_BOOT_URL: process.env.SPRING_BOOT_URL || "http://localhost:8080",
   },
   output: "standalone",
   experimental: {
@@ -20,7 +19,6 @@ const nextConfig: NextConfig = {
       ),
     },
   },
-  // 정적 파일 처리 최적화
   trailingSlash: false,
   generateEtags: false,
   compress: true,
