@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async rewrites() {
+    console.log(
+      "All env vars:",
+      Object.keys(process.env).filter((key) => key.includes("API"))
+    );
+    console.log("NODE_ENV:", process.env.NODE_ENV);
+    console.log("API_URL:", process.env.API_URL);
     const apiUrl = process.env.API_URL || "http://localhost:8080";
     console.log("API_URL: ", apiUrl);
 
