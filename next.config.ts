@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+console.log(`[Next.js Config] API_URL is: ${process.env.API_URL}`);
+console.log(`[Next.js Config] VERCEL_URL is: ${process.env.VERCEL_URL}`);
+
 const nextConfig: NextConfig = {
   async rewrites() {
     console.log("API_URL: ", process.env.API_URL);
