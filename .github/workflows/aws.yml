@@ -10,7 +10,7 @@ env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: nextjs-bbs-app
   ECS_SERVICE: nextjs-bbs-service
-  ECS_CLUSTER: nextjs-bbs-cluster
+  ECS_CLUSTER: bbs-cluster
   ECS_TASK_DEFINITION: nextjs-bbs-task
 
 # GitHub OIDC 권한 설정
