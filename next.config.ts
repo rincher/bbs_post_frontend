@@ -3,7 +3,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   async rewrites() {
     console.log("NEXT_PUBLIC_API_URL: ", process.env.NEXT_PUBLIC_API_URL);
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+    console.log("API_URL: ", process.env.API_URL);
+    const apiUrl =
+      process.env.NEXT_PUBLIC_API_URL ||
+      process.env.API_URL ||
+      "http://localhost:8080";
 
     return [
       {
